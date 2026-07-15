@@ -21,7 +21,7 @@ namespace CititesInfoAPI.Controllers
 
 			if (city is null)
 			{
-				return NotFound($"City with ID: {id} doesnt exist.");
+				return NotFound();
 			}
 
 			return Ok(city);

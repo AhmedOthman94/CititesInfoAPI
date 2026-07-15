@@ -1,7 +1,7 @@
 @baseUrl = https://localhost:7240
 @baseSite = https://localhost:7240
 @cityId = 1
-@cityID = 3
+@cityID = 6
 @pointOfInterestId = 1
 
 ###
