@@ -1,6 +1,10 @@
+using CititesInfoAPI;
+using CititesInfoAPI.Services;
 using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 // Add services to the container.
 
@@ -22,6 +26,14 @@ builder.Services.AddProblemDetails(options =>
 });
 
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+
+#if DEBUG
+builder.Services.AddTransient<IMailServices, LocalMailService>();
+#else
+builder.Services.AddTransient<IMailServices, CloudMailService>();
+#endif
+
+builder.Services.AddSingleton<CitiesDataStore>();
 
 var app = builder.Build();
 

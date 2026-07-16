@@ -5,18 +5,19 @@ namespace CititesInfoAPI.Controllers
 {
 	[ApiController]
 	[Route("api/cities")]
-	public class CitiesController : ControllerBase
+	public class CitiesController(CitiesDataStore citiesDataStore)
+			: ControllerBase
 	{
 		[HttpGet()]
 		public ActionResult<IEnumerable<CityDto>> GetCities()
 		{
-			return Ok(CitiesDataStore.Current.Cities);
+			return Ok(citiesDataStore.Cities);
 		}
 
 		[HttpGet("{id}")]
 		public ActionResult<CityDto> GetCity(int id)
 		{
-			var city = CitiesDataStore.Current.Cities
+			var city = citiesDataStore.Cities
 							.FirstOrDefault(x => x.Id == id);
 
 			if (city is null)
