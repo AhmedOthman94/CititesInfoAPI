@@ -1,7 +1,7 @@
 @baseUrl = https://localhost:7240
 @baseSite = https://localhost:7240
 @cityId = 1
-@cityID = 6
+@cityID = 2
 @pointOfInterestId = 1
 
 ###
@@ -19,6 +19,7 @@ Accept: application/json
 ### Get all cities (XML format)
 GET {{baseUrl}}/api/cities
 Accept: application/xml
+
 
 ### Get one city using cityID
 GET {{baseSite}}/api/cities/{{cityID}}
@@ -115,7 +116,7 @@ DELETE {{baseUrl}}/api/cities/{{cityId}}/pointsofinterest/{{pointOfInterestId}}
 ###
 
 ### Get a file
-GET {{baseUrl}}/api/files/sample-file-identifier
+GET {{baseUrl}}/api/files/simple-file
 Accept: application/pdf
 
 ### Upload a PDF file (requires multipart/form-data)
@@ -124,10 +125,10 @@ POST {{baseUrl}}/api/files
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="file"; filename="sample-file.pdf"
+Content-Disposition: form-data; name="file"; filename="simple-file.pdf"
 Content-Type: application/pdf
 
-< ./sample-file.pdf
+< ./simple-file.pdf
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 ###
