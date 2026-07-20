@@ -35,7 +35,6 @@ builder.Services.AddTransient<IMailServices, LocalMailService>();
 builder.Services.AddTransient<IMailServices, CloudMailService>();
 #endif
 
-builder.Services.AddSingleton<CitiesDataStore>();
 
 builder.Services.AddDbContext<CityInfoContext>(dbContextOptions => 
 	dbContextOptions.UseSqlite(

@@ -35,6 +35,7 @@ namespace CititesInfoAPI.Services
 			return await context.Cities.AnyAsync(c => c.Id == cityId);
 		}
 
+		
 		public async Task<PointOfInterest?> GetPointOfInterestForCityAsync(int cityId,
 				int pointOfInterestId)
 		{
@@ -47,6 +48,39 @@ namespace CititesInfoAPI.Services
 		{
 			return await context.PointsOfInterest
 					.Where(p => p.CityId == cityId).ToListAsync();
+		}
+
+		public async Task AddPointOfInterestForCityAsyc(int cityId,
+				PointOfInterest pointOfInterest)
+		{
+			var city = await GetCityAsync(cityId, false);
+			city?.PointsOfInterest.Add(pointOfInterest);
+		}
+
+		public void DeletePointOfInterest(PointOfInterest pointOfInterest)
+		{
+			context.PointsOfInterest.Remove(pointOfInterest);
+		}
+
+		public async Task<int> UpdatePointsOfInterestDescriptionForCityAsync(int cityId,
+					string newDescription)
+		{
+			return await context.PointsOfInterest
+						.Where(p => p.CityId == cityId)
+						.ExecuteUpdateAsync(setters => setters
+						.SetProperty(p => p.Description, newDescription));
+		}
+
+		public async Task<int> DeleteAllPointsOfInterestForCityAsync(int cityId)
+		{
+			return await context.PointsOfInterest
+					.Where(p => p.CityId == cityId)
+					.ExecuteDeleteAsync();
+		}
+
+		public async Task<bool> SaveChangesAsync()
+		{
+			return (await context.SaveChangesAsync() >= 0);
 		}
 	}
 }
