@@ -22,11 +22,11 @@ Accept: application/xml
 
 
 ### Get one city using cityID
-GET {{baseSite}}/api/cities/{{cityID}}
+GET {{baseSite}}/api/cities/{{cityID}}?includePointsOfInterest=true
 Accept: application/json
 
 ### Get specific city
-GET {{baseUrl}}/api/cities/{{cityId}}
+GET {{baseUrl}}/api/cities/{{cityId}}?includePointsOfInterest=true
 Accept: application/json
 
 ### Invalid

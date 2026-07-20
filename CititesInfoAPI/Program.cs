@@ -1,6 +1,8 @@
 using CititesInfoAPI;
+using CititesInfoAPI.DbContexts;
 using CititesInfoAPI.Services;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
@@ -34,6 +36,17 @@ builder.Services.AddTransient<IMailServices, CloudMailService>();
 #endif
 
 builder.Services.AddSingleton<CitiesDataStore>();
+
+builder.Services.AddDbContext<CityInfoContext>(dbContextOptions => 
+	dbContextOptions.UseSqlite(
+	builder.Configuration["ConnectionStrings:CityInfoDbConnectionString"]
+		?? throw new InvalidOperationException()));
+
+builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
+
+builder.Services.AddAutoMapper(config => { },
+		AppDomain.CurrentDomain.GetAssemblies());
+
 
 var app = builder.Build();
 
