@@ -24,6 +24,10 @@ Accept: application/json
 GET {{baseUrl}}/api/cities?searchQuery=park
 Accept: application/json
 
+### Get all cities pagged
+GET {{baseUrl}}/api/cities?pageNumber=2&pageSize=1
+Accept: application/json
+
 ### Get all cities (XML format)
 GET {{baseUrl}}/api/cities
 Accept: application/xml

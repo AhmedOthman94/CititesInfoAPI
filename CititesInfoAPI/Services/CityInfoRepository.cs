@@ -1,5 +1,6 @@
 ﻿using CititesInfoAPI.DbContexts;
 using CititesInfoAPI.Entities;
+using CititesInfoAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CititesInfoAPI.Services
@@ -18,14 +19,14 @@ namespace CititesInfoAPI.Services
 					.OrderBy(c => c.Name).ToListAsync(cancellationToken);
 		}
 
-		public async Task<IEnumerable<City>> GetCitiesReadOnlyAsync(
-				string? name, string? searchQuery, CancellationToken cancellationToken)
+		public async Task<(IEnumerable<City>, PaginationMetadata?)> GetCitiesReadOnlyAsync(
+				string? name, 
+				string? searchQuery,
+				int pageNumber,
+				int pageSize,
+				CancellationToken cancellationToken)
 		{
-			if (string.IsNullOrEmpty(name)
-				&& string.IsNullOrWhiteSpace(searchQuery))
-			{
-				return await GetCitiesReadOnlyAsync(cancellationToken);
-			}
+			
 
 			var collection = context.Cities as IQueryable<City>;
 			
@@ -42,10 +43,19 @@ namespace CititesInfoAPI.Services
 						|| (c.Description != null && c.Description.Contains(searchQuery)) );
 			}
 
-			return await collection
+			var totalItemCount = await collection.CountAsync(cancellationToken);
+			var paginationMetadate = new PaginationMetadata(totalItemCount,
+					pageSize, 
+					pageNumber);
+
+			var collectionToReturn =  await collection
 						.AsNoTracking()
 						.OrderBy(c => c.Name)
+						.Skip(pageSize * (pageNumber - 1))
+						.Take(pageSize)
 						.ToListAsync(cancellationToken);
+
+			return (collectionToReturn, paginationMetadate);
 		}
 
 		public async Task<City?> GetCityAsync(int cityId, 

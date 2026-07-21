@@ -1,4 +1,5 @@
 ﻿using CititesInfoAPI.Entities;
+using CititesInfoAPI.Models;
 
 namespace CititesInfoAPI.Services
 {
@@ -6,8 +7,10 @@ namespace CititesInfoAPI.Services
 	{
 		Task<IEnumerable<City>> GetCitiesAsync();
 		Task<IEnumerable<City>> GetCitiesReadOnlyAsync(CancellationToken cancellationToken);
-		Task<IEnumerable<City>> GetCitiesReadOnlyAsync(string? name, 
+		Task<(IEnumerable<City>, PaginationMetadata?)> GetCitiesReadOnlyAsync(string? name, 
 				string? searchQuery,
+				int pageNumber,
+				int pageSize,
 				CancellationToken cancellationToken);
 		Task<City?> GetCityAsync(int cityId, bool includePointsOfInterest);
 		Task<bool> CityExistsAsync(int cityId);

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
 using CititesInfoAPI.Entities;
 using CititesInfoAPI.Models;
 using CititesInfoAPI.Services;
@@ -12,15 +13,32 @@ namespace CititesInfoAPI.Controllers
 			IMapper mapper)
 			: ControllerBase
 	{
+		const int _maxCitiesPageSize = 20;
+
 		[HttpGet()]
 		public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(
 				[FromQuery]string? name,
 				[FromQuery]string? searchQuery,
+				int pageNumber = 1,
+				int pageSize = 10,
 				CancellationToken cancellationToken = default)
 		{
-			var cityEntities = await cityInfoRepository.GetCitiesReadOnlyAsync(name, 
+			if (pageSize > _maxCitiesPageSize)
+			{
+				pageSize= _maxCitiesPageSize;
+			}
+
+			var (cityEntities, paginationMetadata) = await cityInfoRepository.GetCitiesReadOnlyAsync(name, 
 					searchQuery,
+					pageNumber,
+					pageSize,
 					cancellationToken);
+
+			if (paginationMetadata != null) 
+			{
+				Response.Headers.Append("X-Pagination",
+					JsonSerializer.Serialize(paginationMetadata));
+			}
 
 			return Ok(mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityEntities));
 		}
