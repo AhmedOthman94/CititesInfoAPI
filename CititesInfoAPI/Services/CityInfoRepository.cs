@@ -11,10 +11,41 @@ namespace CititesInfoAPI.Services
 			return await context.Cities.OrderBy(c => c.Name).ToListAsync();
 		}
 
-		public async Task<IEnumerable<City>> GetCitiesReadOnlyAsync()
+		public async Task<IEnumerable<City>> GetCitiesReadOnlyAsync(
+				CancellationToken cancellationToken)
 		{
 			return await context.Cities.AsNoTracking()
-					.OrderBy(c => c.Name).ToListAsync();
+					.OrderBy(c => c.Name).ToListAsync(cancellationToken);
+		}
+
+		public async Task<IEnumerable<City>> GetCitiesReadOnlyAsync(
+				string? name, string? searchQuery, CancellationToken cancellationToken)
+		{
+			if (string.IsNullOrEmpty(name)
+				&& string.IsNullOrWhiteSpace(searchQuery))
+			{
+				return await GetCitiesReadOnlyAsync(cancellationToken);
+			}
+
+			var collection = context.Cities as IQueryable<City>;
+			
+			if (!string.IsNullOrWhiteSpace(name))
+			{
+				name = name.Trim();
+				collection = collection.Where(c => c.Name == name);
+			}
+
+			if (!string.IsNullOrWhiteSpace(searchQuery))
+			{
+				searchQuery = searchQuery.Trim();
+				collection = collection.Where(c => c.Name.Contains(searchQuery)
+						|| (c.Description != null && c.Description.Contains(searchQuery)) );
+			}
+
+			return await collection
+						.AsNoTracking()
+						.OrderBy(c => c.Name)
+						.ToListAsync(cancellationToken);
 		}
 
 		public async Task<City?> GetCityAsync(int cityId, 

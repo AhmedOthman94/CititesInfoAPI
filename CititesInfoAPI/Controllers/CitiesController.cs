@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CititesInfoAPI.Entities;
 using CititesInfoAPI.Models;
 using CititesInfoAPI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +13,18 @@ namespace CititesInfoAPI.Controllers
 			: ControllerBase
 	{
 		[HttpGet()]
-		public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities()
+		public async Task<ActionResult<IEnumerable<CityWithoutPointsOfInterestDto>>> GetCities(
+				[FromQuery]string? name,
+				[FromQuery]string? searchQuery,
+				CancellationToken cancellationToken = default)
 		{
-			var cityEntities = await cityInfoRepository.GetCitiesReadOnlyAsync();
+			var cityEntities = await cityInfoRepository.GetCitiesReadOnlyAsync(name, 
+					searchQuery,
+					cancellationToken);
 
 			return Ok(mapper.Map<IEnumerable<CityWithoutPointsOfInterestDto>>(cityEntities));
 		}
+
 
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetCity(int id,

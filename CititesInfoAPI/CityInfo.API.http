@@ -16,6 +16,14 @@ Accept: application/json
 GET {{baseUrl}}/api/cities
 Accept: application/json
 
+### Get all cities filtered 
+GET {{baseUrl}}/api/cities?name=Paris
+Accept: application/json
+
+### Get all cities Seached
+GET {{baseUrl}}/api/cities?searchQuery=park
+Accept: application/json
+
 ### Get all cities (XML format)
 GET {{baseUrl}}/api/cities
 Accept: application/xml
