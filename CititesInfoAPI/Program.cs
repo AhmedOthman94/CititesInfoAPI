@@ -30,11 +30,10 @@ builder.Services.AddProblemDetails(options =>
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
 
 #if DEBUG
-builder.Services.AddTransient<IMailServices, LocalMailService>();
+builder.Services.AddTransient<IMailService, LocalMailService>();
 #else
-builder.Services.AddTransient<IMailServices, CloudMailService>();
+builder.Services.AddTransient<IMailService, CloudMailService>();
 #endif
-
 
 builder.Services.AddDbContext<CityInfoContext>(dbContextOptions => 
 	dbContextOptions.UseSqlite(
@@ -42,6 +41,7 @@ builder.Services.AddDbContext<CityInfoContext>(dbContextOptions =>
 		?? throw new InvalidOperationException()));
 
 builder.Services.AddScoped<ICityInfoRepository, CityInfoRepository>();
+builder.Services.AddScoped<IPointOfInterestService, PointOfInterestService>();
 
 builder.Services.AddAutoMapper(config => { },
 		AppDomain.CurrentDomain.GetAssemblies());
